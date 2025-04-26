@@ -1,0 +1,17 @@
+{
+    "_type": "request",
+    "method": "GET",
+    "body": {
+        "mimeType": "No Body"
+    },
+    "url": "http://localhost:8081/api/garage/1",
+    "sortOrder": 0,
+    "parameters": [],
+    "pathParameters": [],
+    "headers": [
+        {
+            "name": "",
+            "value": ""
+        }
+    ]
+}

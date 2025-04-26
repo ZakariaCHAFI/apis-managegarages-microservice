@@ -1,0 +1,18 @@
+{
+    "_type": "request",
+    "method": "POST",
+    "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"name\" : \"renault\",\n    \"address\": \"casablanca\",\n    \"email\":\"renault@gmail.com\",\n    \"telephone\":\"0666154878\"\n}"
+    },
+    "url": "http://localhost:8081/api/create",
+    "sortOrder": 4,
+    "parameters": [],
+    "headers": [
+        {
+            "name": "Content-Type",
+            "value": "application/json"
+        }
+    ],
+    "pathParameters": []
+}

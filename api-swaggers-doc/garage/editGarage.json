@@ -1,0 +1,18 @@
+{
+    "_type": "request",
+    "method": "POST",
+    "body": {
+        "mimeType": "application/json",
+        "text": "{\n    \"id\" : 1,\n    \"name\" : \"speedy\",\n    \"address\": \"rabat\",\n    \"email\":\"speedy@gmail.com\",\n    \"telephone\":\"0537986565\"\n}"
+    },
+    "url": "http://localhost:8081/api/edit",
+    "sortOrder": 2,
+    "parameters": [],
+    "headers": [
+        {
+            "name": "Content-Type",
+            "value": "application/json"
+        }
+    ],
+    "pathParameters": []
+}
