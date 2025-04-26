@@ -72,7 +72,7 @@ public class VehiculeService {
      *
      * @param id
      */
-    public void remove(Long id) {
+    public void removeById(Long id) {
         vehiculeRepository.deleteById(id);
     }
 

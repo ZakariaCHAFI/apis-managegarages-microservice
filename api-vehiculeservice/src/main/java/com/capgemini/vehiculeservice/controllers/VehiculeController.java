@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,7 +76,15 @@ public class VehiculeController {
     @GetMapping("/vehicule/{id}")
     @Operation(summary = "Find vehicule by Id")
     @ApiResponses({@ApiResponse(responseCode = "200", description = "Find vehicule by Id ", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
-    public ResponseEntity<VehiculeDto> findById(@PathVariable(required = true) Long id) throws InvalidRequestException {
+    public ResponseEntity<VehiculeDto> findById(@PathVariable(required = true) Long id)  {
         return ResponseEntity.ok().body(vehiculeService.findById(id));
+    }
+
+    @GetMapping("/remove")
+    @Operation(summary = "remove vehicule by Id")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "remove vehicule by Id ", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    public ResponseEntity<String> removeById(@RequestParam(required = true) Long id) {
+        vehiculeService.removeById(id);
+        return new ResponseEntity<>("Vehicule " + id +" removed", HttpStatus.OK);
     }
 }
