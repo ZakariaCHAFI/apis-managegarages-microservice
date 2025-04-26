@@ -80,7 +80,7 @@ public class VehiculeController {
         return ResponseEntity.ok().body(vehiculeService.findById(id));
     }
 
-    @GetMapping("/remove")
+    @DeleteMapping("/remove")
     @Operation(summary = "remove vehicule by Id")
     @ApiResponses({@ApiResponse(responseCode = "200", description = "remove vehicule by Id ", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
     public ResponseEntity<String> removeById(@RequestParam(required = true) Long id) {

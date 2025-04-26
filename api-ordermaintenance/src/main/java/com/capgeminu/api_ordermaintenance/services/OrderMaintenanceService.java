@@ -4,16 +4,22 @@ import com.capgeminu.api_ordermaintenance.dtos.GarageDto;
 import com.capgeminu.api_ordermaintenance.dtos.OrderMaintenanceDto;
 import com.capgeminu.api_ordermaintenance.dtos.VehiculeDto;
 import com.capgeminu.api_ordermaintenance.models.OrderMaintenanceModel;
+import com.capgeminu.api_ordermaintenance.openfeign.VehiculeRestClient;
 import com.capgeminu.api_ordermaintenance.repositories.OrderMaintenanceRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderMaintenanceService {
 
     private final OrderMaintenanceRepository orderMaintenanceRepository;
+    private final VehiculeRestClient vehiculeRestClient;
 
-    public OrderMaintenanceService(OrderMaintenanceRepository orderMaintenanceRepository) {
+    public OrderMaintenanceService(OrderMaintenanceRepository orderMaintenanceRepository, VehiculeRestClient vehiculeRestClient) {
         this.orderMaintenanceRepository = orderMaintenanceRepository;
+        this.vehiculeRestClient = vehiculeRestClient;
     }
 
     public OrderMaintenanceDto createOrder(GarageDto garageDto, VehiculeDto vehiculeDto) {
@@ -23,6 +29,17 @@ public class OrderMaintenanceService {
         orderMaintenanceModel = orderMaintenanceRepository.save(orderMaintenanceModel);
 
         return getOrderMaintenanceDto(garageDto, vehiculeDto, orderMaintenanceModel);
+    }
+
+    public List<OrderMaintenanceDto> findOrderMaintenanceByGarageId(GarageDto garageDto) {
+        List<OrderMaintenanceModel> orderMaintenanceModels = orderMaintenanceRepository.findOrderMaintenanceByGarageId(garageDto.getId());
+        List<OrderMaintenanceDto> orderMaintenanceDtos = orderMaintenanceModels.stream().map(order -> OrderMaintenanceDto.builder().
+                orderId(order.getId()).
+                garage(garageDto).vehicule(vehiculeRestClient.getVehiculeById(order.getVehiculeId()))
+                .creationDate(order.getCreationDate())
+                .lastModifiedDate(order.getLastModifiedDate()).build()
+                ).collect(Collectors.toList());
+        return orderMaintenanceDtos;
     }
 
     private static OrderMaintenanceDto getOrderMaintenanceDto(GarageDto garageDto, VehiculeDto vehiculeDto, OrderMaintenanceModel orderMaintenanceModel) {

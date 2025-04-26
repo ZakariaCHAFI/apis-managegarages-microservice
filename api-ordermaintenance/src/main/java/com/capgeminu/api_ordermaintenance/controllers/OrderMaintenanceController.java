@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -31,8 +33,8 @@ public class OrderMaintenanceController {
     OrderMaintenanceService orderMaintenanceService;
 
     @PostMapping("/placeOrder")
-    @Operation(summary = "Creation Garage")
-    @ApiResponses({@ApiResponse(responseCode = "200", description = "Creation Garage", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    @Operation(summary = "Creation order maintenance")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Creation order maintenance", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
     public ResponseEntity<OrderMaintenanceDto> create(@RequestParam(required = true) Long garageId, @RequestParam(required = true) Long vehiculeId ) {
         GarageDto garageDto = garageRestClient.getGarageById(garageId);
         VehiculeDto vehiculeDto = vehiculeRestClient.getVehiculeById(vehiculeId);
@@ -45,5 +47,17 @@ public class OrderMaintenanceController {
             throw new EntityNotFoundException("Vehicule not found, is not valid request ");
         }
         return ResponseEntity.ok().body(orderMaintenanceService.createOrder(garageDto, vehiculeDto));
+    }
+
+    @GetMapping("/listVehicules")
+    @Operation(summary = "Lister les véhicules d’un garage spécifique.")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Lister les véhicules d’un garage spécifique.", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    public ResponseEntity<List<OrderMaintenanceDto>> listVehiculeByGarageId(@RequestParam(required = true) Long garageId ) {
+        GarageDto garageDto = garageRestClient.getGarageById(garageId);
+        if(garageDto == null) {
+            log.error("Garage dto not found, {0}", garageDto);
+            throw new EntityNotFoundException("Garege not found, is not valid request ");
+        }
+        return ResponseEntity.ok().body(orderMaintenanceService.findOrderMaintenanceByGarageId(garageDto));
     }
 }
