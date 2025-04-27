@@ -49,6 +49,13 @@ public class OrderMaintenanceController {
         return ResponseEntity.ok().body(orderMaintenanceService.createOrder(garageDto, vehiculeDto));
     }
 
+    @GetMapping("/orders")
+    @Operation(summary = "Lister all maintenance orders.")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Lister all maintenance orders.", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    public ResponseEntity<List<OrderMaintenanceDto>> findAll() {
+        return ResponseEntity.ok().body(orderMaintenanceService.findAll());
+    }
+
     @GetMapping("/listVehicules")
     @Operation(summary = "Lister les véhicules d’un garage spécifique.")
     @ApiResponses({@ApiResponse(responseCode = "200", description = "Lister les véhicules d’un garage spécifique.", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
@@ -59,5 +66,17 @@ public class OrderMaintenanceController {
             throw new EntityNotFoundException("Garege not found, is not valid request ");
         }
         return ResponseEntity.ok().body(orderMaintenanceService.findOrderMaintenanceByGarageId(garageDto));
+    }
+
+    @GetMapping("/brand")
+    @Operation(summary = "lister tous les véhicules d’un modèle donné dans plusieurs garages.")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Lister les véhicules d’un garage spécifique.", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    public ResponseEntity<List<OrderMaintenanceDto>> listVehiculeByBrand(@RequestParam(required = true) String brand ) {
+        List<VehiculeDto> vehiculeDtos = vehiculeRestClient.getVehiculeByBrand(brand);
+        if(vehiculeDtos == null) {
+            log.error("Vehicule dto not found, {0}", vehiculeDtos);
+            throw new EntityNotFoundException("Vehicule not found, is not valid request ");
+        }
+        return ResponseEntity.ok().body(orderMaintenanceService.findOrderMaintenanceByBrand(vehiculeDtos));
     }
 }

@@ -87,4 +87,11 @@ public class VehiculeController {
         vehiculeService.removeById(id);
         return new ResponseEntity<>("Vehicule " + id +" removed", HttpStatus.OK);
     }
+
+    @GetMapping("/vehicule")
+    @Operation(summary = "Find vehicule by brand")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Find vehicule by brand ", content = @Content(mediaType = "application/json")), @ApiResponse(responseCode = "500", description = "default error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDto.class)))})
+    public ResponseEntity<List<VehiculeDto>> findByBrand(@RequestParam(required = true) String brand)  {
+        return ResponseEntity.ok().body(vehiculeService.findByBrand(brand));
+    }
 }

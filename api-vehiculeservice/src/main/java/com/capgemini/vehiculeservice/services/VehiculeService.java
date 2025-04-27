@@ -76,4 +76,8 @@ public class VehiculeService {
         vehiculeRepository.deleteById(id);
     }
 
+    public List<VehiculeDto> findByBrand(String brand) {
+        return vehiculeRepository.findByBrand(brand).stream().map(vehiculePopulator::toDto).collect(Collectors.toList());
+    }
+
 }
